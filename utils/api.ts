@@ -32,3 +32,19 @@ export const createNewEntry = async () => {
     throw new Error("Failed to create new entry");
   }
 };
+
+export const askQuestion = async (question: string) => {
+  const request = new Request(createURL("/api/question"), {
+    method: "POST",
+    body: JSON.stringify({ question }),
+  });
+
+  const res = await fetch(request);
+
+  if (res.ok) {
+    const data = await res.json();
+    return data;
+  } else {
+    throw new Error("Failed to create new entry");
+  }
+};
