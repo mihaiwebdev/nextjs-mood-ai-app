@@ -1,3 +1,4 @@
+import { analyze } from "@/utils/ai";
 import { getCurrentUser } from "@/utils/auth";
 import { prisma } from "@/utils/db";
 import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
@@ -20,6 +21,25 @@ export const PATCH = async (request: Request, { params }: Params) => {
   if (!updatedEntry) {
     return NextResponse.error();
   }
+
+  const analasys = await analyze(updatedEntry.content);
+
+  if (!analasys) {
+    return NextResponse.error();
+  }
+
+  await prisma.analysis.upsert({
+    where: {
+      entryId: updatedEntry.id,
+    },
+    update: {
+      ...analasys,
+    },
+    create: {
+      entryId: updatedEntry.id,
+      ...analasys,
+    },
+  });
 
   return NextResponse.json({ data: updatedEntry });
 };

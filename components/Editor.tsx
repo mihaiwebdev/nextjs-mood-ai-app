@@ -13,7 +13,7 @@ const Editor = ({ entry }: { entry: JournalEntry }) => {
     data: value,
     onSave: async (_value) => {
       setIsLoading(true);
-      const updated = await updateEntry(entry.id, _value);
+      await updateEntry(entry.id, _value);
       setIsLoading(false);
     },
   });
