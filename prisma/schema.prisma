@@ -22,6 +22,7 @@ model User {
   email     String         @unique
   // One to many relationship with JournalEntry
   entries   JournalEntry[]
+  analyses  Analysis[]
 }
 
 model JournalEntry {
@@ -35,7 +36,6 @@ model JournalEntry {
   // One to one relationship with Analysis
   analysis  Analysis?
 
-
   @@unique([userId, id])
 }
 
@@ -47,11 +47,15 @@ model Analysis {
   entryId   String
   entry     JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
 
-  mood      String
-  summary   String       @db.Text
-  color     String
-  negative  Boolean
-  subject   String
+  userId         String
+  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mood           String
+  summary        String  @db.Text
+  color          String
+  negative       Boolean
+  subject        String
+  sentimentScore Float   @default(0)
 
   @@unique([entryId])
+  @@index([userId])
 }
